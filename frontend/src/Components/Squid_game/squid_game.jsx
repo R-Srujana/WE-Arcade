@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 
 import PlayGroundTopSection from "./playground_top_section.jsx";
 import PlayerRow from "./player_row.jsx";
@@ -8,9 +8,19 @@ import dollAudioFile from "../../Assets/squid_game_doll_audio.mp3";
 
 const toBeKilledArray = [true, false, true, false, true];
 
-function SquidGame() {
+const SquidGame = forwardRef(({ autoStart, onGameComplete }, ref) => {
   const playerRowRef = useRef(null);
   const dollRef = useRef(null); // Ref for the Doll component
+
+  useEffect(() => {
+    if (autoStart) {
+      // Add a small delay to ensure components are mounted
+      const timer = setTimeout(() => {
+        startGame();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoStart]);
 
   const playAudio = (audioFileUrl) => {
     const audio = new Audio(audioFileUrl);
@@ -20,24 +30,32 @@ function SquidGame() {
       console.error("Failed to play the audio:", error);
     });
 
-    // When the first audio finishes, play it again
+    // When the first audio finishes, play it again and enable next button
     audio.onended = () => {
       const audio2 = new Audio(audioFileUrl);
       audio2.play().catch((error) => {
         console.error("Failed to play the second audio:", error);
       });
+      
+      if (dollRef.current) {
+        console.log("Triggering doll turn...");
+        dollRef.current.turnAfterDelay();
+      }
+
+      // When second audio ends, trigger game completion
+      audio2.onended = () => {
+        if (onGameComplete) {
+          onGameComplete();
+        }
+      };
     };
   };
 
   const startGame = () => {
-    playAudio(dollAudioFile); // Play audio twice in sequence
+    playAudio(dollAudioFile);
 
     if (playerRowRef.current) {
       playerRowRef.current.startFallingAllPlayers();
-    }
-    if (dollRef.current) {
-      console.log("Triggering doll turn...");
-      dollRef.current.turnAfterDelay();
     }
   };
 
@@ -62,6 +80,6 @@ function SquidGame() {
       <BoundaryLine Customstyle={{ marginTop: "auto", marginBottom: "35px" }} />
     </div>
   );
-}
+});
 
 export default SquidGame;
