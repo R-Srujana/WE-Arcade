@@ -33,6 +33,7 @@ class Player extends Component {
     deadImage: PlayerDeadImage,
     bottomPercentage: 0,
     to_be_killed: false,
+    isFailedTestCase: false,
   };
 
   clearAllTimersAndIntervals = () => {
@@ -52,9 +53,9 @@ class Player extends Component {
           imageSrc: this.props.aliveImage,
         },
         () => {
-          if (this.props.to_be_killed) {
-            // Player is marked to be killed
-            this.startFallingInterval();
+          if (this.props.isFailedTestCase) {
+            // Player is marked to be killed based on test case
+            this.startFallingInterval(true);
             this.timers.push(
               setTimeout(() => {
                 this.stopFalling();
@@ -63,7 +64,7 @@ class Player extends Component {
             );
           } else {
             // Player is alive
-            this.startFallingInterval();
+            this.startFallingInterval(true);
 
             // Pause falling after toBeKilledTimeout
             this.timers.push(
@@ -79,7 +80,7 @@ class Player extends Component {
                   setTimeout(() => {
                     if (this.state.is_running) {
                       this.isPaused = false;
-                      this.startFallingInterval();
+                      this.startFallingInterval(false);
 
                       // Stop falling after a certain time (continueFallingDuration)
                       this.timers.push(
@@ -105,10 +106,13 @@ class Player extends Component {
     }
   };
 
-  startFallingInterval = () => {
-    // Check if the player is not paused and still running
+  startFallingInterval = (isFirstHalf) => {
     if (!this.isPaused && this.state.is_running) {
-      this.timers.push(setInterval(this.updatePosition, this.updatePosVal - 50));
+      const speed = 7.5; // Constant speed throughout the game
+      this.timers.push(setInterval(
+        () => this.updatePosition(speed), 
+        this.updatePosVal
+      ));
     }
   };
 
@@ -128,9 +132,9 @@ class Player extends Component {
     }
   };
 
-  updatePosition = () => {
+  updatePosition = (speed) => {
     this.setState((prevState) => ({
-      top: prevState.top - 5, // Adjust falling speed here
+      top: prevState.top - speed, // Move up by speed pixels
     }));
   };
 
@@ -169,6 +173,7 @@ Player.propTypes = {
   deadImage: PropTypes.string,
   bottomPercentage: PropTypes.number,
   to_be_killed: PropTypes.bool,
+  isFailedTestCase: PropTypes.bool,
 };
 
 export default Player;
