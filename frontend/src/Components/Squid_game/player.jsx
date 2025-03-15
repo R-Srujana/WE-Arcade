@@ -53,8 +53,13 @@ class Player extends Component {
           imageSrc: this.props.aliveImage,
         },
         () => {
+<<<<<<< HEAD
           if (this.props.isFailedTestCase) {
             // Player is marked to be killed based on test case
+=======
+          if (this.props.to_be_killed) {
+            // Player is marked to be killed
+>>>>>>> 613e8aeabc5aab36f2a51fd1b3ad034e727a685e
             this.startFallingInterval(true);
             this.timers.push(
               setTimeout(() => {

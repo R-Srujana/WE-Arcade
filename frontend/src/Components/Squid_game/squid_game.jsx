@@ -6,9 +6,15 @@ import BoundaryLine from "./boundary_line.jsx";
 
 import dollAudioFile from "../../Assets/squid_game_doll_audio.mp3";
 
+<<<<<<< HEAD
 const toBeKilledArray = [true, false, false, false, true, false, false, true, false, true];
 
 const SquidGame = forwardRef(({ autoStart, onGameComplete, lastTestCasesArray }, ref) => {
+=======
+const toBeKilledArray = [true, false, true, false, true];
+
+const SquidGame = forwardRef(({ autoStart, onGameComplete }, ref) => {
+>>>>>>> 613e8aeabc5aab36f2a51fd1b3ad034e727a685e
   const playerRowRef = useRef(null);
   const dollRef = useRef(null); // Ref for the Doll component
 
@@ -24,10 +30,14 @@ const SquidGame = forwardRef(({ autoStart, onGameComplete, lastTestCasesArray },
 
   const playAudio = (audioFileUrl) => {
     const audio = new Audio(audioFileUrl);
+<<<<<<< HEAD
     if (dollRef.current) {
       console.log("Triggering doll turn...");
       dollRef.current.turnAfterDelay();
     }
+=======
+
+>>>>>>> 613e8aeabc5aab36f2a51fd1b3ad034e727a685e
     // Play the audio
     audio.play().catch((error) => {
       console.error("Failed to play the audio:", error);
@@ -62,8 +72,11 @@ const SquidGame = forwardRef(({ autoStart, onGameComplete, lastTestCasesArray },
     }
   };
 
+<<<<<<< HEAD
   console.log("To Be Killed Array:", toBeKilledArray); // Debug log to see the array
   console.log("Last Test Cases Array:", lastTestCasesArray); // Debug log to see the array
+=======
+>>>>>>> 613e8aeabc5aab36f2a51fd1b3ad034e727a685e
   return (
     <div
       style={{
@@ -80,7 +93,11 @@ const SquidGame = forwardRef(({ autoStart, onGameComplete, lastTestCasesArray },
     >
       <PlayGroundTopSection dollRef={dollRef} /> {/* Pass dollRef to PlayGroundTopSection */}
       <BoundaryLine Customstyle={{ marginTop: "35px" }} />
+<<<<<<< HEAD
       <PlayerRow ref={playerRowRef} toBeKilledArray={toBeKilledArray} lastTestCasesArray={lastTestCasesArray} />
+=======
+      <PlayerRow ref={playerRowRef} toBeKilledArray={toBeKilledArray} />
+>>>>>>> 613e8aeabc5aab36f2a51fd1b3ad034e727a685e
       <button onClick={startGame}>Start Game</button>
       <BoundaryLine Customstyle={{ marginTop: "auto", marginBottom: "35px" }} />
     </div>
